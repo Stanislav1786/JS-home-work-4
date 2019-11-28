@@ -45,26 +45,46 @@ console.log(wordsList(myLongStr, 'rep')); // {"repellendus", "repudiandae", "rep
  * isISO – опциональный параметр переключения формата даты.
  */
 
-// let myDate = new Date();
+let myDate = new Date();
+let getLocalDate = (date, isSeconds = false, isISO = false) => {
+    const reg = new RegExp(':\\d{2}$', 'gui');
+    let res;
+    if (!isISO) res = isSeconds ?
+        date.toLocaleString() :
+        date.toLocaleString().replace(reg, '');
+    else {
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1 < 9 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+        const day = date.getDate() < 9 ? `0${date.getDate()}` : date.getDate();
+        const hour = date.getHours() < 9 ? `0${date.getHours()}` : date.getHours();
+        const minutes = date.getMinutes() < 9 ? `0${date.getMinutes()}` : date.getMinutes();
+        const seconds = date.getSeconds() < 9 ? `0${date.getSeconds()}` : date.getSeconds();
 
-// console.log(getLocalDate(myDate)); // 16.07.2019, 00:15
-// console.log(getLocalDate(myDate, true)); // 16.07.2019, 00:15:32
-// console.log(getLocalDate(myDate, false, true)); // 2019-06-02, 00:15
-// console.log(getLocalDate(myDate, true, true)); // 2019-06-02, 00:15:32
-// console.log(getLocalDate(new Date(123456))); // 01.01.1970, 03:02
-// console.log(getLocalDate(new Date(123456), true)); // 1970-01-01, 03:02:03
-// console.log(getLocalDate(new Date(123456), false, true)); // 1970-01-01, 03:02:03
-// console.log(getLocalDate(new Date(123456), true, true)); // 1970-01-01, 03:02:03
+        res = isSeconds ? `${year}-${month}-${day}, ${hour}:${minutes}:${seconds}` : `${year}-${month}-${day}, ${hour}:${minutes}`;
+
+    }
+
+    return res;
+};
+
+console.log(getLocalDate(myDate)); // 16.07.2019, 00:15
+console.log(getLocalDate(myDate, true)); // 16.07.2019, 00:15:32
+console.log(getLocalDate(myDate, false, true)); // 2019-06-02, 00:15
+console.log(getLocalDate(myDate, true, true)); // 2019-06-02, 00:15:32
+console.log(getLocalDate(new Date(123456))); // 01.01.1970, 03:02
+console.log(getLocalDate(new Date(123456), true)); // 1970-01-01, 03:02:03
+console.log(getLocalDate(new Date(123456), false, true)); // 1970-01-01, 03:02:03
+console.log(getLocalDate(new Date(123456), true, true)); // 1970-01-01, 03:02:03
 
 // тестирование
-// console.log(getLocalDate(new Date(123456)) === '01.01.1970, 03:02');
-// console.log(getLocalDate(new Date(123456), true) === '01.01.1970, 03:02:03');
-// console.log(getLocalDate(new Date(123456), false, true) === '1970-01-01, 03:02');
-// console.log(getLocalDate(new Date(123456), true, true) === '1970-01-01, 03:02:03');
-// console.log(getLocalDate(new Date(1999999123456)) === '18.05.2033, 06:18');
-// console.log(getLocalDate(new Date(1999999123456), true) === '18.05.2033, 06:18:43');
-// console.log(getLocalDate(new Date(1999999123456), false, true) === '2033-05-18, 06:18');
-// console.log(getLocalDate(new Date(1999999123456), true, true) === '2033-05-18, 06:18:43');
+console.log(getLocalDate(new Date(123456)) === '01.01.1970, 03:02');
+console.log(getLocalDate(new Date(123456), true) === '01.01.1970, 03:02:03');
+console.log(getLocalDate(new Date(123456), false, true) === '1970-01-01, 03:02');
+console.log(getLocalDate(new Date(123456), true, true) === '1970-01-01, 03:02:03');
+console.log(getLocalDate(new Date(1999999123456)) === '18.05.2033, 06:18');
+console.log(getLocalDate(new Date(1999999123456), true) === '18.05.2033, 06:18:43');
+console.log(getLocalDate(new Date(1999999123456), false, true) === '2033-05-18, 06:18');
+console.log(getLocalDate(new Date(1999999123456), true, true) === '2033-05-18, 06:18:43');
 
 /*
  * #3
@@ -72,11 +92,19 @@ console.log(wordsList(myLongStr, 'rep')); // {"repellendus", "repudiandae", "rep
  * Создайте функцию getWeekDay(date), которая принимает дату в виде строки в формате 'yyyy-mm-dd'
  * и выводит текущий день недели: "понедельник", "вторник", … "воскресенье".
  */
+let getWeekDay = (d) => {
+    const date = new Date(d);
+    const days = [
+        'воскресенье', 'понедельник', 'вторник', 'среда', 'четверг',
+        'пятница', 'суббота'
+    ];
 
-// console.log(getWeekDay('2019-01-30')); // среда
-// console.log(getWeekDay('2019-07-16')); // вторник
-// console.log(getWeekDay('2019-07-27')); // суббота
+    return days[date.getDay()];
+};
 
+console.log(getWeekDay('2019-01-30')); // среда
+console.log(getWeekDay('2019-07-16')); // вторник
+console.log(getWeekDay('2019-07-27')); // суббота
 /*
  * #4
  *
@@ -84,9 +112,17 @@ console.log(wordsList(myLongStr, 'rep')); // {"repellendus", "repudiandae", "rep
  * День нужно возвратить в европейской нумерации, т.е. понедельник имеет номер 1, вторник номер 2, …, воскресенье – номер 7.
  */
 
-// console.log(getLocalDay('2019-07-16')); // 2
-// console.log(getLocalDay('2019-07-25')); // 4
-// console.log(getLocalDay('2019-07-27')); // 6
+let getLocalDay = (d) => {
+    const date = new Date(d);
+    let day = date.getDay();
+    if (day === 0) day = 7;
+
+    return day;
+};
+
+console.log(getLocalDay('2019-07-16')); // 2
+console.log(getLocalDay('2019-07-25')); // 4
+console.log(getLocalDay('2019-07-27')); // 6
 
 /*
  * #5
@@ -95,10 +131,18 @@ console.log(wordsList(myLongStr, 'rep')); // {"repellendus", "repudiandae", "rep
  * которая была days дней назад от указанной даты date.
  * Дата принимается и возвращается в формате YYYY-MM-DD.
  */
+let getDateAgo = (d, days) => {
+    const date = new Date(d);
 
-// console.log(getDateAgo('2019-01-29', 1)); // 28.01.2019
-// console.log(getDateAgo('2019-01-29', 2)); // 27.01.2019
-// console.log(getDateAgo('2019-01-29', 365)); // 29.01.2018
+    date.setDate(date.getDate() - days);
+
+    return date.toLocaleString().replace(/(\d.*),\s+(\d.*)/gu, '$1');
+};
+
+
+console.log(getDateAgo('2019-01-29', 1)); // 28.01.2019
+console.log(getDateAgo('2019-01-29', 2)); // 27.01.2019
+console.log(getDateAgo('2019-01-29', 365)); // 29.01.2018
 
 /*
  * #6
@@ -114,16 +158,43 @@ console.log(wordsList(myLongStr, 'rep')); // {"repellendus", "repudiandae", "rep
  * Объекты и их методы, созданные прототипом должны полностью соответствовать объектам из прошлого задания.
  */
 
-// let car = new Car(2000, 'Lacetti', 'Chevrolet', 2010);
-// let car2 = new Car(5000, 'FX50 AWD', 'Infinite', 2019);
-// console.log(car.info()); // chevrolet Lacetti, 2010cc, year 2010, used
-// car.used = 'new';
-// console.log(car.info()); // chevrolet Lacetti, 2019cc, year 2019, new -- год изменен
-// car.used = 'used';
-// console.log(car.info()); // chevrolet Lacetti, 2019cc, year 2019, new -- изменения не выполняются
-// console.log(car2.info()); // infinite FX50 AWD, 2019cc, year 2019, new
-// car.used = 'used';
-// console.log(car2.info()); // infinite FX50 AWD, 2019cc, year 2019, new -- изменения не выполняются
+let Car = function(engine, model, name, year) {
+    this.engine = engine;
+    this.model = model;
+    this.name = name;
+    this.year = year;
+};
+
+Object.defineProperties(Car.prototype, {
+    used: {
+        get() {
+            const yearNow = new Date().getFullYear();
+
+            return yearNow - this.year > 1 ? 'used' : 'new';
+        },
+        set(value) {
+            const yearNow = new Date().getFullYear();
+
+            if (value === 'new' && this.year < yearNow) this.year = yearNow;
+        }
+    }
+});
+
+Car.prototype.info = function() {
+    return `${this.name} ${this.model}, ${this.engine}cc, year ${this.year}, ${this.used}`;
+};
+
+
+let car = new Car(2000, 'Lacetti', 'Chevrolet', 2010);
+let car2 = new Car(5000, 'FX50 AWD', 'Infinite', 2019);
+console.log(car.info()); // chevrolet Lacetti, 2010cc, year 2010, used
+car.used = 'new';
+console.log(car.info()); // chevrolet Lacetti, 2019cc, year 2019, new -- год изменен
+car.used = 'used';
+console.log(car.info()); // chevrolet Lacetti, 2019cc, year 2019, new -- изменения не выполняются
+console.log(car2.info()); // infinite FX50 AWD, 2019cc, year 2019, new
+car.used = 'used';
+console.log(car2.info()); // infinite FX50 AWD, 2019cc, year 2019, new -- изменения не выполняются
 
 /*
  * #7
@@ -134,23 +205,33 @@ console.log(wordsList(myLongStr, 'rep')); // {"repellendus", "repudiandae", "rep
  * Если в качестве параметра передается что-либо кроме функции, тестирование не выполняется, возвращается 0.
  */
 
-// данная функция необходима для корректного тестирования кода
-// function test1() {
-//   let str = myLongStr;
-//   while (str.indexOf('o') !== -1) str = str.replace('o', '');
-//   while (str.indexOf('a') !== -1) str = str.replace('a', '');
-//   while (str.indexOf('e') !== -1) str = str.replace('e', '');
-//   while (str.indexOf('u') !== -1) str = str.replace('u', '');
-//   while (str.indexOf('i') !== -1) str = str.replace('i', '');
-// }
+let testPerformance = (interations, func) => {
+    let time = Date.now();
+
+    if (typeof func === 'function')
+        for (let i = interations; i--;) func();
+
+
+    return Date.now() - time;
+};
 
 // данная функция необходима для корректного тестирования кода
-// function test2() {
-//   const reg = new RegExp('[oaeui]', 'gui');
+function test1() {
+    let str = myLongStr;
+    while (str.indexOf('o') !== -1) str = str.replace('o', '');
+    while (str.indexOf('a') !== -1) str = str.replace('a', '');
+    while (str.indexOf('e') !== -1) str = str.replace('e', '');
+    while (str.indexOf('u') !== -1) str = str.replace('u', '');
+    while (str.indexOf('i') !== -1) str = str.replace('i', '');
+};
 
-//   myLongStr.replace(reg, '');
-// }
+// данная функция необходима для корректного тестирования кода
+function test2() {
+    const reg = new RegExp('[oaeui]', 'gui');
 
-// console.log(testPerformance(100, test1)); // time
-// console.log(testPerformance(100, test2)); // time
-// console.log(testPerformance(100, 12345)); // 0
+    myLongStr.replace(reg, '');
+};
+
+console.log(testPerformance(100, test1)); // time
+console.log(testPerformance(100, test2)); // time
+console.log(testPerformance(100, 12345)); // 0
